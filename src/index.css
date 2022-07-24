@@ -1,13 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @apply bg-slate-200;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.header {
+  @apply fixed top-0 gap-5 py-2 w-full bg-orange-400 text-white text-3xl capitalize italic shadow-lg;
+}
+
+.button-circle {
+  @apply flex-center-center flex-col w-14 h-14 rounded-full border border-gray-600 text-sm text-gray-600 leading-5;
+}
+
+.button-circle > div:first-child {
+  @apply text-xl font-bold;
+}
+.button-circle > svg:first-child {
+  @apply text-2xl font-bold;
+}
+.button-circle-active,
+.button-circle:hover,
+.button-circle:active {
+  @apply bg-gray-600 border-slate-50 text-slate-50;
+}
+
+.row {
+  @apply flex items-center justify-center py-2 shadow-md bg-white w-full;
+}
+.row.active {
+  @apply bg-orange-600;
+}
+
+.row.active .button-circle {
+  @apply border-slate-50 text-white;
+}
+
+.row.active .divider {
+  @apply bg-slate-50;
+}
+
+.row.active .divider {
+  @apply bg-slate-50;
+}
+
+.row-date {
+  @apply text-center text-xl text-gray-600 font-bold w-10;
+}
+
+.row-date.active {
+  @apply text-white;
+}
+
+.divider {
+  @apply bg-gray-600 w-0.5 h-14 mx-6;
 }
