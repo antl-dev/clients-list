@@ -17,7 +17,7 @@ body {
 }
 
 .button-circle {
-  @apply flex-center-center flex-col w-14 h-14 rounded-full border border-gray-600 text-sm text-gray-600 leading-5;
+  @apply flex-center-center flex-col h-14 px-2 rounded-md border border-gray-600 text-sm text-gray-600 leading-5 shadow-md;
 }
 
 .button-circle > div:first-child {
@@ -32,11 +32,15 @@ body {
   @apply bg-gray-600 border-slate-50 text-slate-50;
 }
 
+.button-circle.mini {
+  @apply h-8;
+}
+
 .row {
-  @apply flex items-center justify-center py-2 shadow-md bg-white w-full;
+  @apply flex items-center justify-start gap-4 py-2 shadow-md bg-white w-full;
 }
 .row.active {
-  @apply bg-orange-600;
+  @apply bg-orange-400 shadow-none;
 }
 
 .row.active .button-circle {
@@ -52,13 +56,29 @@ body {
 }
 
 .row-date {
-  @apply text-center text-xl text-gray-600 font-bold w-10;
+  @apply flex items-center justify-center flex-col text-xl text-gray-600 font-bold w-10 border-gray-400 border-r-2 px-10;
 }
 
 .row-date.active {
-  @apply text-white;
+  @apply text-white border-white;
 }
 
-.divider {
-  @apply bg-gray-600 w-0.5 h-14 mx-6;
+.input {
+  @apply p-2 w-10/12 border-orange-400 text-orange-600 border rounded-md shadow-md text-center;
+}
+
+.input[type="time"] {
+  @apply p-0 w-max shadow-none ml-7 bg-white text-3xl border-b-2 border-x-0 border-t-0 rounded-none text-center;
+}
+
+.input[type="time"]::-webkit-calendar-picker-indicator {
+  @apply opacity-40 hidden;
+}
+
+.input.mini {
+  @apply text-xl w-max ml-0;
+}
+
+.input:focus {
+  @apply outline-orange-400 shadow-2xl;
 }

@@ -11,11 +11,6 @@ export const useGetMonthDays = (month) => {
         monthText: temp.format("MMMM"),
         nameShort: temp.format("dd"),
         nameFull: temp.format("dddd"),
-        client: [
-          { hour: "11", minute: "00" },
-          { hour: "14", minute: "30" },
-          { hour: "10", minute: "00" },
-        ],
       };
     });
   return temp;
