@@ -5,7 +5,7 @@ export const ButtonCircle = ({ children, onClick, active, className }) => {
     <Link
       to="/edit"
       onClick={onClick}
-      className={clsx("button-circle", className, {
+      className={clsx("btn btn-circle", className, {
         active: active,
       })}
     >

@@ -34,7 +34,7 @@ export const Calendar = ({ handle }) => {
   };
 
   const { isLoading, error, data } = useQuery(["clientsData"], () =>
-    fetch("http://localhost:8000/clients").then((response) => response.json())
+    fetch("http://localhost:3050/clients").then((response) => response.json())
   );
 
   if (isLoading) return <p>Загрузка...</p>;
@@ -42,11 +42,7 @@ export const Calendar = ({ handle }) => {
 
   return (
     <>
-      <Header
-        month={monthRender}
-        onClick={handleMonth}
-        className="flex-center-around"
-      />
+      <Header month={monthRender} onClick={handleMonth} />
 
       <section className="flex flex-col gap-2 container mt-16">
         {monthDays?.map((day) => {
