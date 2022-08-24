@@ -53,38 +53,59 @@ export const Calendar = () => {
           return (
             <div
               key={day.day}
-              className="flex items-center gap-2 border-b border-gray-300"
+              className={clsx(
+                "flex items-center gap-2 py-2 border-b border-gray-300",
+                { "bg-primary": isMatching }
+              )}
             >
               <div className="flex flex-col justify-center items-center min-w-[4em]  border-r border-gray-300">
-                <div className="text-xs text-primary">{day.nameShort}</div>
-                <div className="text-3xl text-primary-content">{day.day}</div>
+                <div
+                  className={clsx("text-lg text-primary", {
+                    "text-accent-content": isMatching,
+                  })}
+                >
+                  {day.nameShort}
+                </div>
+                <div
+                  className={clsx("text-3xl text-primary-content", {
+                    "text-accent": isMatching,
+                  })}
+                >
+                  {day.day}
+                </div>
               </div>
-              {data
-                ?.filter(
-                  (client) =>
-                    dayjs(client.date).format("DD.MM.YYYY") === day.dateFull
-                )
-                ?.sort(
-                  (a, b) =>
-                    dayjs(a.date).format("HHmm") - dayjs(b.date).format("HHmm")
-                )
-                ?.map((item) => (
-                  <ButtonCircle
-                    key={item.date}
-                    onClick={() => handleState(item)}
-                  >
-                    <div className="flex flex-col">
-                      <div>{dayjs(item.date).format("HH")}</div>
-                      <div>{dayjs(item.date).format("mm")}</div>
-                    </div>
-                  </ButtonCircle>
-                ))}
-              <ButtonCircle
-                className="btn-sm mx-2"
-                onClick={() => handleState()}
-              >
-                <IoAdd />
-              </ButtonCircle>
+
+              <div className="flex items-center gap-1">
+                {data
+                  ?.filter(
+                    (client) =>
+                      dayjs(client.date).format("DD.MM.YYYY") === day.dateFull
+                  )
+                  ?.sort(
+                    (a, b) =>
+                      dayjs(a.date).format("HHmm") -
+                      dayjs(b.date).format("HHmm")
+                  )
+                  ?.map((item) => (
+                    <ButtonCircle
+                      key={item.date}
+                      onClick={() => handleState(item)}
+                      active={isMatching}
+                    >
+                      <div className="flex flex-col">
+                        <div>{dayjs(item.date).format("HH")}</div>
+                        <div>{dayjs(item.date).format("mm")}</div>
+                      </div>
+                    </ButtonCircle>
+                  ))}
+                <ButtonCircle
+                  className="btn-sm mx-2"
+                  onClick={() => handleState()}
+                  active={isMatching}
+                >
+                  <IoAdd />
+                </ButtonCircle>
+              </div>
             </div>
           );
         })}

@@ -6,7 +6,7 @@ export const ButtonCircle = ({ children, onClick, active, className }) => {
       to="/edit"
       onClick={onClick}
       className={clsx("btn btn-circle btn-primary", className, {
-        active: active,
+        "btn-accent": active,
       })}
     >
       {children}
