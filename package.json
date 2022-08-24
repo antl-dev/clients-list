@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
-    "server": "json-server --port 3050 ./db.json --watch"
+    "server": "json-server --port 3050 --host 192.168.0.200 ./db.json --watch"
   },
   "browserslist": {
     "production": [
