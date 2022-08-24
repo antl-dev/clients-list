@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { IoAdd } from "react-icons/io5";
 
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { useGetMonthDays } from "../hooks/useGetMonthDays";
+
 import { Header } from "../components/Header";
 import { ButtonCircle } from "../components/ButtonCircle";
 
-export const Calendar = ({ handle }) => {
+import { useGetMonthDays } from "../hooks/useGetMonthDays";
+import { IoAdd } from "react-icons/io5";
+
+export const Calendar = () => {
   const dayjsInit = dayjs();
   const currentMonth = dayjsInit.format("M");
   const [activeMonth, setActiveMonth] = useState(currentMonth - 1);
@@ -44,55 +46,49 @@ export const Calendar = ({ handle }) => {
     <>
       <Header month={monthRender} onClick={handleMonth} />
 
-      <section className="flex flex-col gap-2 container mt-16">
+      <div className="my-4 border-t">
         {monthDays?.map((day) => {
           const isMatching = day.dateFull === dayjsInit.format("DD.MM.YYYY");
 
           return (
             <div
               key={day.day}
-              className={clsx("row", {
-                active: isMatching,
-              })}
+              className="flex items-center gap-2 border-b border-gray-300"
             >
-              <div
-                className={clsx("row-date", {
-                  active: isMatching,
-                })}
-              >
-                <div>{day.day}</div>
-                <div>{day.nameShort}</div>
+              <div className="flex flex-col justify-center items-center min-w-[4em]  border-r border-gray-300">
+                <div className="text-xs text-primary">{day.nameShort}</div>
+                <div className="text-3xl text-primary-content">{day.day}</div>
               </div>
-
-              <div className="flex gap-3 items-center overflow-auto">
-                {data
-                  ?.filter(
-                    (client) =>
-                      dayjs(client.date).format("DD.MM.YYYY") === day.dateFull
-                  )
-                  ?.sort(
-                    (a, b) =>
-                      dayjs(a.date).format("HHmm") -
-                      dayjs(b.date).format("HHmm")
-                  )
-                  ?.map((item) => (
-                    <ButtonCircle
-                      key={item.date}
-                      onClick={() => handleState(item)}
-                    >
+              {data
+                ?.filter(
+                  (client) =>
+                    dayjs(client.date).format("DD.MM.YYYY") === day.dateFull
+                )
+                ?.sort(
+                  (a, b) =>
+                    dayjs(a.date).format("HHmm") - dayjs(b.date).format("HHmm")
+                )
+                ?.map((item) => (
+                  <ButtonCircle
+                    key={item.date}
+                    onClick={() => handleState(item)}
+                  >
+                    <div className="flex flex-col">
                       <div>{dayjs(item.date).format("HH")}</div>
                       <div>{dayjs(item.date).format("mm")}</div>
-                    </ButtonCircle>
-                  ))}
-
-                <ButtonCircle className="mini" onClick={() => handleState()}>
-                  <IoAdd />
-                </ButtonCircle>
-              </div>
+                    </div>
+                  </ButtonCircle>
+                ))}
+              <ButtonCircle
+                className="btn-sm mx-2"
+                onClick={() => handleState()}
+              >
+                <IoAdd />
+              </ButtonCircle>
             </div>
           );
         })}
-      </section>
+      </div>
     </>
   );
 };
