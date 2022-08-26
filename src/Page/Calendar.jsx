@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 import dayjs from "dayjs";
@@ -8,7 +8,13 @@ import { Header } from "../components/Header";
 import { ButtonCircle } from "../components/ButtonCircle";
 
 import { useGetMonthDays } from "../hooks/useGetMonthDays";
-import { IoAdd } from "react-icons/io5";
+import {
+  IoAdd,
+  IoCloseSharp,
+  IoPencilSharp,
+  IoSave,
+  IoTrash,
+} from "react-icons/io5";
 
 export const Calendar = () => {
   const dayjsInit = dayjs();
@@ -17,8 +23,11 @@ export const Calendar = () => {
   const monthRender = dayjs().month(activeMonth).format("MMMM");
   const monthDays = useGetMonthDays(activeMonth);
 
+  const currentRowRef = useRef();
+
   const [modalVisible, setmodalVisible] = useState(false);
-  const [modalSelect, setModalSelect] = useState("");
+  const [modalSelect, setModalSelect] = useState("vk");
+  const [modalTimeEdit, setModalTimeEdit] = useState(false);
 
   const handleMonth = (action) => {
     switch (action) {
@@ -43,17 +52,37 @@ export const Calendar = () => {
     return;
   };
 
-  const { isLoading, error, data } = useQuery(["clientsData"], () =>
+  const { isLoading, error, data, isSuccess } = useQuery(["clientsData"], () =>
     fetch("http://192.168.0.200:3050/clients").then((response) =>
       response.json()
     )
   );
 
+  const executeScroll = () => currentRowRef.current.scrollIntoView();
+
+  useEffect(() => {
+    if (isSuccess) {
+      executeScroll();
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (!modalVisible) {
+      document.body.style.position = "";
+    } else {
+      document.body.style.position = "fixed";
+    }
+  }, [modalVisible]);
+
+  const handleHoursState = () => {
+    setModalTimeEdit((prev) => !prev);
+  };
+
   if (isLoading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка: {error.message}</p>;
 
   return (
-    <>
+    <div className="no-scrollbar overflow-y-auto">
       <Header month={monthRender} onClick={handleMonth} />
 
       <div className="my-4 border-t">
@@ -63,6 +92,7 @@ export const Calendar = () => {
           return (
             <div
               key={day.day}
+              ref={isMatching ? currentRowRef : null}
               className={clsx(
                 "flex items-center gap-2 py-2 border-b border-gray-300",
                 { "bg-primary": isMatching }
@@ -121,66 +151,141 @@ export const Calendar = () => {
         })}
       </div>
 
-      <div className={clsx("modal", { "modal-open": modalVisible })}>
+      <div
+        className={clsx("modal", {
+          "modal-open": modalVisible,
+        })}
+      >
         <div className="modal-box">
-          <div className="flex flex-col justify-center text-center">
-            <h3 className="font-bold text-3xl">24.08.2022</h3>
-            <h3 className="font-bold text-5xl">10:00</h3>
+          <div className="navbar items-start">
+            <div className="navbar-start" />
+            <div className="flex flex-col justify-center text-center mb-2 navbar-center">
+              <div className="text-primary font-bold text-xl">24.08.2022</div>
+
+              {modalTimeEdit ? (
+                <div className="relative">
+                  <input
+                    type="time"
+                    placeholder="Type here"
+                    className="input input-bordered input-primary"
+                  />
+                  <button
+                    onClick={handleHoursState}
+                    className="btn btn-ghost absolute -right-14 text-xl"
+                  >
+                    <IoSave />
+                  </button>
+                </div>
+              ) : (
+                <div className="text-primary-content font-bold text-5xl relative">
+                  10:00
+                  <button
+                    onClick={handleHoursState}
+                    className="btn btn-ghost text-xl absolute -right-14"
+                  >
+                    <IoPencilSharp />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="navbar-end">
+              <button
+                className="btn btn-accent btn-ghost gap-2 text-2xl"
+                onClick={handleVisibleModal}
+              >
+                <IoCloseSharp />
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <input
-              type="text"
-              placeholder="Имя"
-              className="input input-bordered input-primary w-full input-sm"
-            />
-            <input
-              type="text"
-              placeholder="Телефон"
-              className="input input-bordered input-primary w-full input-sm"
-            />
-            <input
-              type="text"
-              placeholder="Комментарий"
-              className="input input-bordered input-primary w-full input-sm"
-            />
-            <input
-              type="text"
-              placeholder="Стоимость"
-              className="input input-bordered input-primary w-full input-sm"
-            />
-            <input
-              type="text"
-              placeholder="Длительность"
-              className="input input-bordered input-primary w-full input-sm"
-            />
+          <div className="flex flex-col items-center max-w-sm mx-auto">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Имя</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Type here"
+                className="input input-bordered input-primary"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Телефон</span>
+              </label>
+              <input
+                type="number"
+                placeholder="Type here"
+                className="input input-bordered input-primary"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Комментарий</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Type here"
+                className="input input-bordered input-primary"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Стоимость</span>
+              </label>
+              <input
+                type="number"
+                placeholder="Type here"
+                className="input input-bordered input-primary"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Длительность</span>
+              </label>
+              <input
+                type="time"
+                placeholder="Type here"
+                className="input input-bordered input-primary"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Месенджер</span>
+              </label>
+              <select
+                className="select select-bordered select-primary select-md"
+                value={modalSelect}
+                onChange={(e) => setModalSelect(e.target.value)}
+              >
+                <option value="vk">Вконтакте</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="sms">СМС</option>
+                <option value="tg">Telegram</option>
+                <option value="phone">Телефон</option>
+              </select>
+            </div>
+          </div>
 
-            <select
-              className="select select-bordered select-primary w-full select-sm"
-              value={modalSelect}
-              onChange={(e) => setModalSelect(e.target.value)}
+          <div className="modal-action justify-center flex-wrap">
+            <button
+              className="btn btn-primary btn-wide items-center gap-2 text-xl"
+              onClick={handleVisibleModal}
             >
-              <option value="">Месенджер</option>
-              <option value="vk">Vk</option>
-              <option value="watsapp">WatsApp</option>
-              <option value="sms">СМС</option>
-              <option value="tg">Telegram</option>
-            </select>
-          </div>
+              <IoSave />
+              Записать
+            </button>
 
-          <div className="modal-action justify-center">
-            <button className="btn btn-success" onClick={handleVisibleModal}>
-              Сохранить
-            </button>
-            <button className="btn btn-warning" onClick={handleVisibleModal}>
-              Отмена
-            </button>
-            <button className="btn btn-accent" onClick={handleVisibleModal}>
-              Удалить
+            <button
+              className="btn btn-accent items-center gap-2 text-xl"
+              onClick={handleVisibleModal}
+            >
+              <IoTrash />
             </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
